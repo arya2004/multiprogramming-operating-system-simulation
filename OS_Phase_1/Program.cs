@@ -19,9 +19,14 @@ namespace OS_Phase_1
             { 'G', 'H', 'I', 'J' },
             { 'K', 'L', 'M', 'N' }
         };
+            ExternalMemory externalMemory = new ExternalMemory(4, 10, 10);
             INputOutput io = new INputOutput(4, 10);
-            io.WriteTOBuffer(charMatrix);
+            io.Read();
+            externalMemory.SetBlock(io._Buffer, 0);
+            io.ClearBuffer();
+            io.WriteTOBuffer(externalMemory.GetBlock(0));
             io.Write();
+            Console.Write("dotnet mwoe");
         }
     }
 }

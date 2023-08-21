@@ -8,11 +8,11 @@ namespace OS_Phase_1.Models
 {
     public class INputOutput
     {
-        private char[] _Buffer;
-        private int _WordLength { get; set; }
-        private int _WordsPerBlock { get; set; }
-        public static readonly string CardReader = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\CArdReader.txt";
-        public static readonly string LinePrinters = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\LinePrinter.txt";
+        public char[] _Buffer;
+        public  int _WordLength { get; set; }
+        public int _WordsPerBlock { get; set; }
+        public readonly string CardReader = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\CArdReader.txt";
+        public  readonly string LinePrinters = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\LinePrinter.txt";
         public INputOutput(int WordLength,  int WordsPerBlock)
         {
             _Buffer = new char[WordsPerBlock* WordLength];
@@ -35,7 +35,7 @@ namespace OS_Phase_1.Models
         }
         
 
-        public void Write()
+        public  void Write()
         {
             StreamWriter sw = new StreamWriter(LinePrinters);
             for (int i = 0; i < _WordsPerBlock * _WordLength; i++)
@@ -51,6 +51,13 @@ namespace OS_Phase_1.Models
             String line = sr.ReadLine();
             _Buffer = line.ToCharArray();
             sr.Close();
+        }
+        public void ClearBuffer()
+        {
+            for (int i = 0; i < _Buffer.Length; i++)
+            {
+                _Buffer[i] = '*';
+            }
         }
 
     }

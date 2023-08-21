@@ -66,6 +66,19 @@ namespace OS_Phase_1.Models
             }
             
         }
+        public void SetBlock(char[] GivenBloc, int BlockAddress)
+        {
+            int k = 0;
+            for (int i = 0; i < _WordsPerBlock; i++)
+            {
+                for (int j = 0; j < _WordLength; j++)
+                {
+                    Memory[(BlockAddress * _WordsPerBlock) + i, j] = GivenBloc[k];
+                    k++;
+                }
+            }
+
+        }
 
         public void CLearBlock(int BlockAddress)
         {

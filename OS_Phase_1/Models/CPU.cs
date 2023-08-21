@@ -21,6 +21,8 @@ namespace OS_Phase_1.Models
             _ToggleRegister = new char[TOggleRegister];
         }
 
+        
+
 
 
     }

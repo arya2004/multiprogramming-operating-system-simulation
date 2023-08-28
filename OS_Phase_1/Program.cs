@@ -3,11 +3,13 @@
 namespace OS_Phase_1
 {
     internal class Program
-    {
+    {   
+        
         static void Main(string[] args)
         {
+
             char[,] charMatrix = new char[,]
-        {
+     {
             { 'A', 'B', 'C', 'D' },
             { 'E', 'F', 'G', 'H' },
             { 'I', 'J', 'K', 'L' },
@@ -18,14 +20,14 @@ namespace OS_Phase_1
             { 'C', 'D', 'E', 'F' },
             { 'G', 'H', 'I', 'J' },
             { 'K', 'L', 'M', 'N' }
-        };
-            ExternalMemory externalMemory = new ExternalMemory(4, 10, 10);
-            INputOutput io = new INputOutput(4, 10);
-            io.Read();
-            externalMemory.SetBlock(io._Buffer, 0);
-            io.ClearBuffer();
-            io.WriteTOBuffer(externalMemory.GetBlock(0));
-            io.Write();
+     };
+
+
+
+
+
+            OS meowOS = new OS();
+            meowOS.READ();
             Console.Write("dotnet mwoe");
         }
     }

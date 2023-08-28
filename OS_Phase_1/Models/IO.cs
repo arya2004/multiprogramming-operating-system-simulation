@@ -11,8 +11,8 @@ namespace OS_Phase_1.Models
         public char[] _Buffer;
         public  int _WordLength { get; set; }
         public int _WordsPerBlock { get; set; }
-        public readonly string CardReader = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\CArdReader.txt";
-        public  readonly string LinePrinters = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\LinePrinter.txt";
+        public readonly string CardReader = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\Input.txt";
+        public  readonly string LinePrinters = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\Output.txt";
         public INputOutput(int WordLength,  int WordsPerBlock)
         {
             _Buffer = new char[WordsPerBlock* WordLength];

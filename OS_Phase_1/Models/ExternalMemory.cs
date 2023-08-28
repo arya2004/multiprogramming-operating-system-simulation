@@ -10,10 +10,10 @@ namespace OS_Phase_1.Models
 
     public class ExternalMemory
     {
-        private char[,] Memory { get; set; }
-        private int _Blocks { get; set; }
-        private int _WordLength { get; set; }
-        private int _WordsPerBlock { get; set; }
+        public char[,] Memory { get; set; }
+        public int _Blocks { get; set; }
+        public int _WordLength { get; set; }
+        public int _WordsPerBlock { get; set; }
 
         public ExternalMemory(int WordLength, int Blocks, int WordsPerBlock)
         {

@@ -13,6 +13,7 @@ namespace OS_Phase_1.Models
         public int _WordsPerBlock { get; set; }
         public readonly string CardReader = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\Input.txt";
         public  readonly string LinePrinters = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\Output.txt";
+        int LineNumber = 0;
         public INputOutput(int WordLength,  int WordsPerBlock)
         {
             _Buffer = new char[WordsPerBlock* WordLength];
@@ -37,18 +38,24 @@ namespace OS_Phase_1.Models
 
         public  void Write()
         {
-            StreamWriter sw = new StreamWriter(LinePrinters);
+           // StreamWriter sw = new StreamWriter(LinePrinters);
+            String temp = "";
             for (int i = 0; i < _WordsPerBlock * _WordLength; i++)
             {
-                sw.Write(_Buffer[i]);
+                temp +=_Buffer[i];
             }
-            sw.Close();
+           // sw.Close();
+            File.AppendAllText(LinePrinters, temp + Environment.NewLine);
         }
 
         public void Read()
         {
             StreamReader sr = new StreamReader(CardReader);
-            String line = sr.ReadLine();
+            
+            String line = File.ReadLines(CardReader).Skip(LineNumber).Take(1).First();
+            LineNumber++;
+
+            
             _Buffer = line.ToCharArray();
             sr.Close();
         }

@@ -12,6 +12,7 @@ namespace OS_Phase_1.Models
         public char[] _InstructionRegister;
         public char[] _ProgramCounter;
         public char[] _ToggleRegister;
+        public int _SI; //interrupt
 
 
         public CPU(int RegisterSize, int InstructionSIze, int ProgramCOunterSize, int TOggleRegister)

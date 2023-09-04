@@ -27,12 +27,9 @@ namespace OS_Phase_1
 
 
             OS meowOS = new OS();
-            meowOS.READ();
-            meowOS.READ();
-            meowOS.WRITE();
-            meowOS.READ();
-            meowOS.WRITE();
-            Console.Write("dotnet mwoe");
+
+
+            meowOS.LOAD();
         }
     }
 }

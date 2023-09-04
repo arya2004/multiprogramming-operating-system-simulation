@@ -9,18 +9,19 @@ namespace OS_Phase_1.Models
 {
     public class OS 
     {
-        private readonly ExternalMemory _externalMemory;
-        private readonly INputOutput _io;
-        private readonly CPU _cpu;
+        public readonly ExternalMemory _externalMemory;
+        public readonly INputOutput _io;
+       public readonly CPU _cpu;
         int stack_ptr = 0;
         int wrt_ptr = 0;
+        int block_ptr = 0;
         public OS()
         {
             _externalMemory = new ExternalMemory(4, 10, 10);
 
             _io = new INputOutput(4, 10);
             _cpu = new CPU(4, 4, 2, 1);
-            _cpu.SetInstructionRegister(new char[] { 'G', 'D', '0', '0' });
+          //  _cpu.SetInstructionRegister(new char[] { 'G', 'D', '4', '0' });
         }
 
         //hardcoded
@@ -29,16 +30,13 @@ namespace OS_Phase_1.Models
             _io.ClearBuffer();
             //int MemoryLocation = _cpu.ParseIRNum();
             char[] MemoryLocation = _cpu.GetInctructionRegister();
+            int Memory_Location = _cpu._InstructionRegister[2] - '0';
+
             _io.Read();
-            if (!(_io._Buffer[0] == '$' && _io._Buffer[1] == 'A' && _io._Buffer[2] == 'M' && _io._Buffer[3] == 'J' ))
-            {
-                _externalMemory.SetBlock(_io._Buffer, stack_ptr);
-                stack_ptr++;
-            }
-            else
-            {
-                Console.WriteLine("encountered $AMJ");
-            }
+
+                _externalMemory.SetBlock(_io._Buffer, Memory_Location);
+          
+            
             
            
             
@@ -49,7 +47,8 @@ namespace OS_Phase_1.Models
 
         public void TERMINATE()
         {
-            throw new NotImplementedException();
+            _io.ClearBuffer();
+            _io.PrintNewLines();
         }
         //again hardcded
         public void WRITE()
@@ -68,11 +67,11 @@ namespace OS_Phase_1.Models
             {
                 READ();
             }
-            if (_cpu._SI == 2)
+            else if (_cpu._SI == 2)
             {
                 WRITE();
             }
-            if (_cpu._SI == 3)
+            else if (_cpu._SI == 3)
             {
                 TERMINATE();
             }
@@ -80,13 +79,47 @@ namespace OS_Phase_1.Models
 
         public void EXECUTE()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("cute");
+            for (int i = 0; i < 10; i++)
+            {
+                _cpu.SetInstructionRegister(_externalMemory.GetWord(_externalMemory.Instruction_Counter));
+                _externalMemory.Instruction_Counter++;
+                Console.WriteLine(_cpu._InstructionRegister);
+            }
         }
 
         public void LOAD()
         {
             Console.WriteLine("Loadin'");
-            
+            int a = 0;
+            while(_io.Read())
+            {
+                if (_io.EncounteredAMJ())
+                {
+                    Console.WriteLine("Saw AMJ");
+                   _externalMemory.CLearMemory();
+                    _cpu.ClearRegister();
+                    _cpu.ClearInstructionRegister();
+                    _cpu.C = false;
+                    block_ptr = 0;
+                }
+                else if (_io.EncounteredDTA())
+                {
+                    Console.WriteLine("SAw DTA");
+                    EXECUTE();
+                }
+                else if (_io.EncounteredEND())
+                {
+                    Console.WriteLine("SAW END");
+                    continue;
+                }
+                else
+                {
+                    _externalMemory.SetBlock(_io._Buffer, block_ptr);
+                    block_ptr++;
+                }
+            }
+                 
 
              
         }

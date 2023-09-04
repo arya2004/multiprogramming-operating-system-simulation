@@ -13,12 +13,16 @@ namespace OS_Phase_1.Models
         public int _WordsPerBlock { get; set; }
         public readonly string CardReader = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\Input.txt";
         public  readonly string LinePrinters = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_1\\IO_Files\\Output.txt";
-        int LineNumber = 0;
+        int LineNumber { get; set; }
+        StreamReader sr { get; set; }
         public INputOutput(int WordLength,  int WordsPerBlock)
         {
             _Buffer = new char[WordsPerBlock* WordLength];
             _WordLength = WordLength;
             _WordsPerBlock = WordsPerBlock;
+            LineNumber = 0;
+             sr = new StreamReader(CardReader);
+
 
         }
 
@@ -48,16 +52,34 @@ namespace OS_Phase_1.Models
             File.AppendAllText(LinePrinters, temp + Environment.NewLine);
         }
 
-        public void Read()
+        public void PrintNewLines()
+        {
+           // String temp = "\n";
+            File.AppendAllText(LinePrinters, Environment.NewLine);
+            File.AppendAllText(LinePrinters, Environment.NewLine);
+        }
+
+        public bool Read()
         {
             StreamReader sr = new StreamReader(CardReader);
-            
-            String line = File.ReadLines(CardReader).Skip(LineNumber).Take(1).First();
-            LineNumber++;
+            String line = "";
+            try
+            {
+                 line = File.ReadLines(CardReader).Skip(LineNumber).Take(1).First();
+            }
+            catch (Exception)
+            {
 
+                return false;
+            }
             
+            LineNumber++;
+            
+           // Console.WriteLine(line);
             _Buffer = line.ToCharArray();
             sr.Close();
+            return true;
+           
         }
         public void ClearBuffer()
         {
@@ -66,6 +88,35 @@ namespace OS_Phase_1.Models
                 _Buffer[i] = '*';
             }
         }
+
+        public bool IsBufferEmpty()
+        {
+            bool a = false;
+            for (int i = 0; i < _Buffer.Length; i++)
+            {
+                if (_Buffer[i] == '\0')
+                {
+                    a = true;
+                    return a;
+                }
+            }
+            return a;
+        }
+
+
+        public bool EncounteredAMJ()
+        {
+            return (_Buffer[0] == '$' && _Buffer[1] == 'A' && _Buffer[2] == 'M' && _Buffer[3] == 'J');
+        }
+        public bool EncounteredDTA()
+        {
+            return (_Buffer[0] == '$' && _Buffer[1] == 'D' && _Buffer[2] == 'T' && _Buffer[3] == 'A');
+        }
+        public bool EncounteredEND()
+        {
+            return (_Buffer[0] == '$' && _Buffer[1] == 'E' && _Buffer[2] == 'N' && _Buffer[3] == 'D');
+        }
+
 
     }
 }

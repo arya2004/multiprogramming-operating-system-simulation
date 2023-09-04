@@ -14,6 +14,8 @@ namespace OS_Phase_1.Models
         public int _Blocks { get; set; }
         public int _WordLength { get; set; }
         public int _WordsPerBlock { get; set; }
+        public int Instruction_Counter { get; set; }
+
 
         public ExternalMemory(int WordLength, int Blocks, int WordsPerBlock)
         {
@@ -21,6 +23,7 @@ namespace OS_Phase_1.Models
             _WordLength = WordLength;
             _Blocks = Blocks;
             _WordsPerBlock = WordsPerBlock;
+            Instruction_Counter = 0;
             
         }
 
@@ -91,6 +94,17 @@ namespace OS_Phase_1.Models
             }
 
         }
+        public void CLearMemory()
+        {
+            for (int i = 0; i < _Blocks; i++)
+            {
+                
+                   CLearBlock (i);
+                
+            }
+
+        }
+
 
     }
 }

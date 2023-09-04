@@ -10,21 +10,20 @@ namespace OS_Phase_1.Models
     {
         public char[] _Register;
         public char[] _InstructionRegister;
-        public char[] _ProgramCounter;
+        public int _ProgramCounter; //instrcuction counter
         public char[] _ToggleRegister;
         public int _SI; //interrupt
+        public bool C { get; set; }
 
 
         public CPU(int RegisterSize, int InstructionSIze, int ProgramCOunterSize, int TOggleRegister)
         {
             _Register = new char[RegisterSize];
             _InstructionRegister = new char[InstructionSIze];
-            _ProgramCounter = new char[ProgramCOunterSize];
+            _ProgramCounter = 0;
             _ToggleRegister = new char[TOggleRegister];
-            for (int i = 0; i < ProgramCOunterSize; i++)
-            {
-                _ProgramCounter[i] = '0';
-            }
+            C = false;
+            
 
           
         }
@@ -56,6 +55,13 @@ namespace OS_Phase_1.Models
             for (int i = 0; i < _InstructionRegister.Length; i++)
             {
                 _InstructionRegister[i]= '\0';
+            }
+        }
+        public void ClearRegister()
+        {
+            for (int i = 0; i < _Register.Length; i++)
+            {
+                _Register[i] = '\0';
             }
         }
         //hardcoded

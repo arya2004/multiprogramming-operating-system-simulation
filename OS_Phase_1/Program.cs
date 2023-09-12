@@ -1,5 +1,7 @@
 ﻿
 
+using OS_Phase_1.SchedulinigAlgo;
+
 namespace OS_Phase_1
 {
 
@@ -15,12 +17,13 @@ namespace OS_Phase_1
 
 
 
-
-            SOS meowOS = new SOS();
-
-
-            meowOS.LOAD();
-            Console.WriteLine("dotnet meown\n end");
+            FCFS f = new FCFS();
+            f.Algorithm();
+            Console.WriteLine("\n");
+            SJF sJF = new SJF();
+            sJF.Algorithm();
+            
+            //Console.WriteLine("dotnet meown\n end");
         }
     }
 }

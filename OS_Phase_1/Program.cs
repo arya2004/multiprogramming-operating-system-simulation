@@ -17,13 +17,14 @@ namespace OS_Phase_1
 
 
 
-            FCFS f = new FCFS();
+            SJF f = new SJF();
             f.Algorithm();
             Console.WriteLine("\n");
-            SJF sJF = new SJF();
-            sJF.Algorithm();
             
-            //Console.WriteLine("dotnet meown\n end");
+
+           
+            
+            Console.WriteLine("dotnet meown\n end");
         }
     }
 }

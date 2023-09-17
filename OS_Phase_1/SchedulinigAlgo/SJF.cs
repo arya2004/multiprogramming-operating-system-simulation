@@ -29,13 +29,25 @@ namespace OS_Phase_1.SchedulinigAlgo
        
         public void Algorithm()
         {
-            Process[] q = new Process[3];
-            q[0] = new Process(0, 1, 4);
-            q[1] = new Process(1, 1, 2);
-            q[2] = new Process(2, 2, 8);
+            Console.WriteLine("SJF ALgorithm in c#");
+            Console.WriteLine("enter the nunmber of processes");
+            int a = Convert.ToInt32(Console.ReadLine());
 
+            Process[] q = new Process[a];
+            //q[0] = new Process(0, 1, 4);
+            //q[1] = new Process(1, 1, 2);
+            //q[2] = new Process(2, 2, 8);
 
-            Process[] sorted = q.OrderBy(i => i.AT).ThenBy(j => j.BT).ToArray();
+            for (int i = 0; i < a; i++)
+            {
+                Console.WriteLine("Enter Process {0} Arrival Time", i);
+                int AT = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter Process {0} Burst Time", i);
+                int BT = Convert.ToInt32(Console.ReadLine());
+                q[i] = new Process(i, AT, BT);
+            }
+
+            Process[] sorted = q.OrderBy(i => i.AT).ThenBy(j => j.PId).ToArray();
             //assumed sorted
 
 
@@ -66,6 +78,7 @@ namespace OS_Phase_1.SchedulinigAlgo
                 sorted[i].CalculateWT();
                 sorted[i].CalculateRT();
             }
+
 
             Console.WriteLine("Pid\tAT\tBT\tCT\tTAT\tWT\tRT");
             for (int i = 0; i < sorted.Length; i++)

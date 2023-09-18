@@ -34,9 +34,9 @@ namespace OS_Phase_1.SchedulinigAlgo
             int a = Convert.ToInt32(Console.ReadLine());
 
             Process[] q = new Process[a];
-            //q[0] = new Process(0, 1, 4);
-            //q[1] = new Process(1, 1, 2);
-            //q[2] = new Process(2, 2, 8);
+            //q[0] = new process(0, 1, 4);
+            //q[1] = new process(1, 1, 2);
+            //q[2] = new process(2, 2, 8);
 
             for (int i = 0; i < a; i++)
             {

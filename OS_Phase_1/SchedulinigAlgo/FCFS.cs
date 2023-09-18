@@ -38,6 +38,11 @@ namespace OS_Phase_1.SchedulinigAlgo
             AT = _AT;
             BT = _BT;
         }
+        public Process(int _AT, int _BT)
+        {
+            AT = _AT;
+            BT = _BT;
+        }
 
         public void CalculateCT()
         {

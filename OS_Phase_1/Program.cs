@@ -17,8 +17,8 @@ namespace OS_Phase_1
 
 
 
-            SJF f = new SJF();
-            f.Algorithm();
+            RoundRobin roundRobin = new RoundRobin();
+            roundRobin.Algorithm();
             Console.WriteLine("\n");
             
 

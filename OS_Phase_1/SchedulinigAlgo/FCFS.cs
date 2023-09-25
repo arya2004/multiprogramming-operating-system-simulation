@@ -122,51 +122,6 @@ namespace OS_Phase_1.SchedulinigAlgo
 
                 Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", sorted[i].PId, sorted[i].AT, sorted[i].BT, sorted[i].CT, sorted[i].TAT, sorted[i].WT, sorted[i].RT);
             }
-
-            Console.WriteLine("Gantt Chart");
-
-            if (sorted[0].AT != 0)
-            {
-                Console.Write("|IDLE|");
-                for (int i = 0; i < sorted.Length; i++)
-                {
-                    Console.Write(" {0} |", sorted[i].PId);
-                }
-                Console.WriteLine("");
-
-                Console.Write("0    {0}", sorted[0].AT);
-
-
-                for (int i = 0; i < sorted.Length; i++)
-                {
-                    Console.Write("   {0}", sorted[i].CT);
-                }
-            }
-            else
-            {
-                Console.Write("|");
-                for (int i = 0; i < sorted.Length; i++)
-                {
-                    Console.Write(" {0} |", sorted[i].PId);
-                }
-                Console.WriteLine("");
-
-                Console.Write("{0}", sorted[0].AT);
-
-
-                for (int i = 0; i < sorted.Length; i++)
-                {
-                    Console.Write("   {0}", sorted[i].CT);
-                }
-
-            }
-
-
-
-
         }
-        
-       
-
     }
 }

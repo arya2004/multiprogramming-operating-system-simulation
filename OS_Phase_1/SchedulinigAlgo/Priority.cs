@@ -29,14 +29,12 @@ namespace OS_Phase_1.SchedulinigAlgo
 
         public void Algorithm()
         {
-            Console.WriteLine("SJF ALgorithm in c#");
+            Console.WriteLine("Priority based ALgorithm in c#");
             Console.WriteLine("enter the nunmber of processes");
             int a = Convert.ToInt32(Console.ReadLine());
 
             Process[] q = new Process[a];
-            //q[0] = new process(0, 1, 4);
-            //q[1] = new process(1, 1, 2);
-            //q[2] = new process(2, 2, 8);
+       
 
             for (int i = 0; i < a; i++)
             {
@@ -54,7 +52,7 @@ namespace OS_Phase_1.SchedulinigAlgo
 
 
 
-            // time = sorted[0].AT + sorted[0].CT;
+        
             sorted[0].CT = sorted[0].AT + sorted[0].BT;
 
 
@@ -75,7 +73,7 @@ namespace OS_Phase_1.SchedulinigAlgo
 
             for (int i = 0; i < sorted.Length; i++)
             {
-                // sorted[i].CalculateCT();
+             
                 sorted[i].CalculateTAT();
                 sorted[i].CalculateWT();
                 sorted[i].CalculateRT();

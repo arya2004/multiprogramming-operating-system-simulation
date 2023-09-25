@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OS_Phase_1.SchedulinigAlgo
 {
-    public class Proc
+    public class Proc_SRTF
     {
         public int PId { get; set; }
         public int AT { get; set; }
@@ -18,14 +18,14 @@ namespace OS_Phase_1.SchedulinigAlgo
         public int WT { get; set; }
         public int RT { get; set; }
         public int RemainingBt { get; set; }
-        public Proc(int _Pid, int _AT, int _BT)
+        public Proc_SRTF(int _Pid, int _AT, int _BT)
         {
             PId = _Pid;
             AT = _AT;
             BT = _BT;
             RemainingBt = _BT;
         }
-        public Proc(int _AT, int _BT)
+        public Proc_SRTF(int _AT, int _BT)
         {
             AT = _AT;
             BT = _BT;
@@ -43,19 +43,19 @@ namespace OS_Phase_1.SchedulinigAlgo
         {
             WT = TAT - BT;
         }
-        
-    }
-    public class RoundRobin
-    {   
-        
-        public void Algorithm()
-        {   
 
-            Proc[] u = new Proc[4];
-            u[0] = new Proc(0, 0, 3);
-            u[1] = new Proc(1, 0, 6);
-            u[2] = new Proc(2, 0, 4);
-            u[3] = new Proc(3, 0, 5);
+    }
+    public class SRTF
+    {
+
+        public void Algorithm()
+        {
+
+            Proc_SRTF[] u = new Proc_SRTF[4];
+            u[0] = new Proc_SRTF(0, 0, 3);
+            u[1] = new Proc_SRTF(1, 0, 6);
+            u[2] = new Proc_SRTF(2, 0, 4);
+            u[3] = new Proc_SRTF(3, 0, 5);
 
 
             int[] isComplete = new int[4];
@@ -70,7 +70,7 @@ namespace OS_Phase_1.SchedulinigAlgo
                 {
 
 
-                    if (isScheduled[kkk] == 0 )
+                    if (isScheduled[kkk] == 0)
                     {
                         isScheduled[kkk] = 1;
                         u[kkk].RT = currentTime - u[kkk].AT;
@@ -101,7 +101,7 @@ namespace OS_Phase_1.SchedulinigAlgo
                         Console.Write("complweted {0} ", kkk + 1);
                     }
                 }
-                kkk = (kkk + 1)%4;
+                kkk = (kkk + 1) % 4;
 
             }
 
@@ -119,7 +119,7 @@ namespace OS_Phase_1.SchedulinigAlgo
                 Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", u[i].PId, u[i].AT, u[i].BT, u[i].CT, u[i].TAT, u[i].WT, u[i].RT);
             }
 
-           
+
 
         }
     }

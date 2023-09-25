@@ -26,7 +26,7 @@ namespace OS_Phase_1.SchedulinigAlgo
 
     public class SJF
     {
-       
+
         public void Algorithm()
         {
             Console.WriteLine("SJF ALgorithm in c#");
@@ -52,14 +52,14 @@ namespace OS_Phase_1.SchedulinigAlgo
 
 
 
-           // time = sorted[0].AT + sorted[0].CT;
-            sorted[0].CT =  sorted[0].AT + sorted[0].BT;
+            // time = sorted[0].AT + sorted[0].CT;
+            sorted[0].CT = sorted[0].AT + sorted[0].BT;
 
 
             for (int i = 1; i < sorted.Length; i++)
             {
 
-                if (sorted[i].AT < sorted[i -1].CT)
+                if (sorted[i].AT < sorted[i - 1].CT)
                 {
                     sorted[i].CT = sorted[i - 1].CT + sorted[i].BT;
                 }
@@ -68,12 +68,12 @@ namespace OS_Phase_1.SchedulinigAlgo
                     sorted[i].CT = sorted[i].AT + sorted[i].BT;
                 }
 
-              
+
             }
 
             for (int i = 0; i < sorted.Length; i++)
             {
-               // sorted[i].CalculateCT();
+                // sorted[i].CalculateCT();
                 sorted[i].CalculateTAT();
                 sorted[i].CalculateWT();
                 sorted[i].CalculateRT();
@@ -123,15 +123,7 @@ namespace OS_Phase_1.SchedulinigAlgo
                 {
                     Console.Write("   {0}", sorted[i].CT);
                 }
-
             }
-
-
-
-
         }
-        
-       
-
     }
 }

@@ -13,12 +13,17 @@ namespace OS_Phase_1
         static void Main(string[] args)
         {
 
-         
 
+            //Priority priority = new Priority();
+            //priority.Algorithm();
 
 
             RoundRobin roundRobin = new RoundRobin();
             roundRobin.Algorithm();
+
+            //SRTF sRTF = new SRTF();
+            //sRTF.Algorithm();
+
             Console.WriteLine("\n");
             
 

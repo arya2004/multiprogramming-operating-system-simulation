@@ -7,120 +7,155 @@ using System.Threading.Tasks;
 
 namespace OS_Phase_1.SchedulinigAlgo
 {
-    public class Proc_SRTF
+    public class Process_SRTF
     {
-        public int PId { get; set; }
-        public int AT { get; set; }
-        public int BT { get; set; }
+        public int pid; // Process_SRTF ID 
+        public int bt; // Burst Time 
+        public int art; // Arrival Time 
 
-        public int CT { get; set; }
-        public int TAT { get; set; }
-        public int WT { get; set; }
-        public int RT { get; set; }
-        public int RemainingBt { get; set; }
-        public Proc_SRTF(int _Pid, int _AT, int _BT)
+        public Process_SRTF(int pid, int bt, int art)
         {
-            PId = _Pid;
-            AT = _AT;
-            BT = _BT;
-            RemainingBt = _BT;
+            this.pid = pid;
+            this.bt = bt;
+            this.art = art;
         }
-        public Proc_SRTF(int _AT, int _BT)
-        {
-            AT = _AT;
-            BT = _BT;
-        }
-
-        public void CalculateCT()
-        {
-            CT = BT + AT;
-        }
-        public void CalculateTAT()
-        {
-            TAT = CT - AT;
-        }
-        public void CalculateWT()
-        {
-            WT = TAT - BT;
-        }
-
     }
+
     public class SRTF
     {
-
-        public void Algorithm()
+        // Method to find the waiting  
+        // time for all Process_SRTFes 
+        public static void findWaitingTime(Process_SRTF[] proc, int n,
+                                        int[] wt)
         {
+            int[] rt = new int[n];
 
-            Proc_SRTF[] u = new Proc_SRTF[4];
-            u[0] = new Proc_SRTF(0, 0, 3);
-            u[1] = new Proc_SRTF(1, 0, 6);
-            u[2] = new Proc_SRTF(2, 0, 4);
-            u[3] = new Proc_SRTF(3, 0, 5);
+            // Copy the burst time into rt[] 
+            for (int i = 0; i < n; i++)
+                rt[i] = proc[i].bt;
 
+            int complete = 0, t = 0, minm = int.MaxValue;
+            int shortest = 0, finish_time;
+            bool check = false;
 
-            int[] isComplete = new int[4];
-            int[] isScheduled = new int[4];
-            int kkk = 0;
-            int TQ = 2;
-            int currentTime = 0;
-            Console.WriteLine("Gantt Cgart");
-            while (!(isComplete.Sum() == isComplete.Length))
+            // Process_SRTF until all Process_SRTFes gets 
+            // completed 
+            while (complete != n)
             {
-                if (isComplete[kkk] != 1)
+
+                // Find Process_SRTF with minimum 
+                // remaining time among the 
+                // Process_SRTFes that arrives till the 
+                // current time` 
+                for (int j = 0; j < n; j++)
                 {
-
-
-                    if (isScheduled[kkk] == 0)
+                    if ((proc[j].art <= t) &&
+                    (rt[j] < minm) && rt[j] > 0)
                     {
-                        isScheduled[kkk] = 1;
-                        u[kkk].RT = currentTime - u[kkk].AT;
-                    }
-                    Console.Write("schedule {0} ", kkk + 1);
-                    if (u[kkk].RemainingBt >= TQ)
-                    {
-                        currentTime += TQ;
-                        u[kkk].RemainingBt -= TQ;
-
-                        if (u[kkk].RemainingBt == 0)
-                        {
-                            u[kkk].CT = currentTime;
-                            isComplete[kkk] = 1;
-                            Console.Write("conpmeted {0} ", kkk + 1);
-                        }
-                        else
-                        {
-                            Console.Write("queued {0} ", kkk + 1);
-                        }
-                    }
-                    else
-                    {
-                        currentTime += u[kkk].RemainingBt;
-                        u[kkk].RemainingBt = 0;
-                        u[kkk].CT = currentTime;
-                        isComplete[kkk] = 1;
-                        Console.Write("complweted {0} ", kkk + 1);
+                        minm = rt[j];
+                        shortest = j;
+                        check = true;
                     }
                 }
-                kkk = (kkk + 1) % 4;
 
+                if (check == false)
+                {
+                    t++;
+                    continue;
+                }
+
+                // Reduce remaining time by one 
+                rt[shortest]--;
+
+                // Update minimum 
+                minm = rt[shortest];
+                if (minm == 0)
+                    minm = int.MaxValue;
+
+                // If a Process_SRTF gets completely 
+                // executed 
+                if (rt[shortest] == 0)
+                {
+
+                    // Increment complete 
+                    complete++;
+                    check = false;
+
+                    // Find finish time of current 
+                    // Process_SRTF 
+                    finish_time = t + 1;
+
+                    // Calculate waiting time 
+                    wt[shortest] = finish_time -
+                                proc[shortest].bt -
+                                proc[shortest].art;
+
+                    if (wt[shortest] < 0)
+                        wt[shortest] = 0;
+                }
+                // Increment time 
+                t++;
             }
-
-            for (int i = 0; i < u.Length; i++)
-            {
-                // sorted[i].CalculateCT();
-                u[i].CalculateTAT();
-                u[i].CalculateWT();
-
-            }
-            Console.WriteLine("\n");
-            Console.WriteLine("Pid\tAT\tBT\tCT\tTAT\tWT\tRT");
-            for (int i = 0; i < u.Length; i++)
-            {
-                Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", u[i].PId, u[i].AT, u[i].BT, u[i].CT, u[i].TAT, u[i].WT, u[i].RT);
-            }
-
-
-
         }
+
+        // Method to calculate turn around time 
+        public static void findTurnAroundTime(Process_SRTF[] proc, int n,
+                                int[] wt, int[] tat)
+        {
+            // calculating turnaround time by adding 
+            // bt[i] + wt[i] 
+            for (int i = 0; i < n; i++)
+                tat[i] = proc[i].bt + wt[i];
+        }
+
+        // Method to calculate average time 
+        public static void findavgTime(Process_SRTF[] proc, int n)
+        {
+            int[] wt = new int[n]; int[] tat = new int[n];
+            int total_wt = 0, total_tat = 0;
+
+            // Function to find waiting time of all 
+            // Process_SRTFes 
+            findWaitingTime(proc, n, wt);
+
+            // Function to find turn around time for 
+            // all Process_SRTFes 
+            findTurnAroundTime(proc, n, wt, tat);
+
+            // Display Process_SRTFes along with all 
+            // details 
+            Console.WriteLine("Process_SRTFes " +
+                            " Burst time " +
+                            " Waiting time " +
+                            " Turn around time");
+
+            // Calculate total waiting time and 
+            // total turnaround time 
+            for (int i = 0; i < n; i++)
+            {
+                total_wt = total_wt + wt[i];
+                total_tat = total_tat + tat[i];
+                Console.WriteLine(" " + proc[i].pid + "\t\t"
+                                + proc[i].bt + "\t\t " + wt[i]
+                                + "\t\t" + tat[i]);
+            }
+
+            Console.WriteLine("Average waiting time = " +
+                            (float)total_wt / (float)n);
+            Console.WriteLine("Average turn around time = " +
+                            (float)total_tat / (float)n);
+        }
+
+        // Driver Method 
+        //public static void Main(String[] args)
+        //{
+        //    Process_SRTF[] proc = { new Process_SRTF(1, 6, 1),
+        //                    new Process_SRTF(2, 8, 1),
+        //                    new Process_SRTF(3, 7, 2),
+        //                    new Process_SRTF(4, 3, 3)};
+
+        //    findavgTime(proc, proc.Length);
+        //}
     }
+
 }

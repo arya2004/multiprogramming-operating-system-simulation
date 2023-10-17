@@ -221,14 +221,14 @@ namespace OS_Phase_2
                 {
                     if (k < 40)
                     {
-                        M[_RealAddress, j] = Buffer[k];
+                        M[i, j] = Buffer[k];
                         k++;
                     }
 
 
                 }
 
-                _RealAddress++;
+                i++;
             }
 
         }
@@ -247,8 +247,10 @@ namespace OS_Phase_2
             }
 
             int k = 0;
-            int i = _RealAddress;
-          
+            int i = IR[2] - '0';
+            i = i * 10;
+            i += IR[3] - '0';
+
 
 
             for (int l = 0; l < 10; ++l)
@@ -351,23 +353,28 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                 }
                 IC++;
 
+                if (IR[2] == '*' && IR[3] == '*')
+                {
+                    Console.WriteLine("sexsex");
+                }
+
                 int Operand = ( (IR[2] - '0') * 10 ) + (IR[3] - '0');
                 int RealOperand = AddressMap(Operand);
 
                 if (IR[0] == 'G' && IR[1] == 'D')    //GD
                 {
                     SI = 1;
-                    MOS(RealOperand);
+                    MOS(Operand);
                 }
                 else if (IR[0] == 'P' && IR[1] == 'D')       //PD
                 {
                     SI = 2;
-                    MOS(RealOperand);
+                    MOS(Operand);
                 }
                 else if (IR[0] == 'H')      //H
                 {
                     SI = 3;
-                    MOS(RealOperand);
+                    MOS(Operand);
                     break;
                 }
                 else if (IR[0] == 'L' && IR[1] == 'R')       //LR
@@ -423,6 +430,12 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
 
                     }
                 }
+
+
+                PCB._TTC++;
+
+
+
             }
 
         }

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OS_Phase_1.SchedulinigAlgo
-{
+namespace Lab.Algorithm.SchedulinigAlgo
+{   
     public class Proc
     {
         public int PId { get; set; }

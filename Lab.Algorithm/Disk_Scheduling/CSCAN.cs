@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OS_Phase_1.Disk_Scheduling
+namespace Lab.Algorithm.Disk_Scheduling
 {
     public class CSCAN
     {

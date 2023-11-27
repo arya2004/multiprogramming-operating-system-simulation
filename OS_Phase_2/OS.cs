@@ -109,7 +109,8 @@ namespace OS_Phase_2
                 isAllocated[j] = false;
             }
             isAllocated[PageTable] = true;
-
+            LoadIC = 0;
+           // PCB = new Pcb();
 
             //sr = new StreamReader(ip);
             // LineNumber = 0;
@@ -117,11 +118,15 @@ namespace OS_Phase_2
         }
 
 
-        public int AddressMap(int VirtualAddress)
+        public int AddressMap(int VirtualAddress)  
         {
             int PageTableEntry = PTR + (VirtualAddress / 10);
             int M_of_PTE = (M[PageTableEntry, 2] - '0') * 10 + (M[PageTableEntry, 3] - '0');
             int RealAddress = M_of_PTE * 10 + (VirtualAddress % 10);
+            if(RealAddress < 0 || RealAddress > 299)
+            {
+                return -1;
+            }
             return RealAddress;
         }
 
@@ -180,7 +185,7 @@ namespace OS_Phase_2
             }
 
             File.AppendAllText(op, "IC\t:\t" + IC.ToString() + Environment.NewLine);
-            File.AppendAllText(op, "IR\t:\t" + IR + Environment.NewLine);
+            File.AppendAllText(op, "IR\t:\t" + IR[0].ToString() + IR[1].ToString()  + IR[2].ToString() + IR[3].ToString() + Environment.NewLine);
             File.AppendAllText(op, "TTC\t:\t" + PCB._TTC + Environment.NewLine);
             File.AppendAllText(op, "LLC\t:\t" + PCB._LLC + Environment.NewLine);
 
@@ -325,6 +330,7 @@ namespace OS_Phase_2
                  If Page Fault Valid, ALLOCATE, update page Table, Adjust IC if necessary,
 EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                  */
+                int Random = ALLOCATE();
                 TERMINATE(6);
             }
             else if (TI == 2 && PI == 1)
@@ -347,6 +353,15 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
             while (true)
             {
                 int RealAddress = AddressMap(IC);
+                //page fault
+                if(RealAddress == -1)
+                {
+                    Console.WriteLine("page folt");
+                    TI = 0; PI = 3;
+                    MOS(RealAddress);
+                    continue;
+                }
+
                 for (int i = 0; i < 4; i++)        //Load in register
                 {
                     IR[i] = M[RealAddress, i];
@@ -355,11 +370,11 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
 
                 if (IR[2] == '*' && IR[3] == '*')
                 {
-                    Console.WriteLine("sexsex");
+                    Console.WriteLine("oj");
                 }
 
                 int Operand = ( (IR[2] - '0') * 10 ) + (IR[3] - '0');
-                int RealOperand = AddressMap(Operand);
+              //  int RealOperand = AddressMap(Operand);
 
                 if (IR[0] == 'G' && IR[1] == 'D')    //GD
                 {
@@ -473,7 +488,7 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                     if (Buffer[0] == '$' && Buffer[1] == 'A' && Buffer[2] == 'M' && Buffer[3] == 'J')
                     {
                         int Random = ALLOCATE();
-                        
+                        PCB = new Pcb();
                         PCB._JobId = (Buffer[4] - '0') * 1000 + (Buffer[5] - '0') * 100+ (Buffer[6] - '0') * 10 + (Buffer[7] - '0');
                         PCB._TTL = (Buffer[8] - '0') * 1000 + (Buffer[9] - '0') * 100 + (Buffer[10] - '0') * 10 + (Buffer[11] - '0');
                         PCB._TLL = (Buffer[12] - '0') * 1000 + (Buffer[13] - '0')    * 100 + (Buffer[14] - '0') * 10 + (Buffer[15] - '0');
@@ -547,7 +562,7 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
             catch (Exception ex)
             {
 
-                //Console.WriteLine(ex.ToString());
+                Console.WriteLine(ex.ToString());
             }
         }
 

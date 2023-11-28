@@ -119,7 +119,12 @@ namespace OS_Phase_2
 
 
         public int AddressMap(int VirtualAddress)  
-        {
+        {   
+            if( VirtualAddress < 0 || VirtualAddress > 99)
+            {
+                return -2;
+            }
+
             int PageTableEntry = PTR + (VirtualAddress / 10);
             int M_of_PTE = (M[PageTableEntry, 2] - '0') * 10 + (M[PageTableEntry, 3] - '0');
             int RealAddress = M_of_PTE * 10 + (VirtualAddress % 10);
@@ -330,8 +335,19 @@ namespace OS_Phase_2
                  If Page Fault Valid, ALLOCATE, update page Table, Adjust IC if necessary,
 EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                  */
-                int Random = ALLOCATE();
-                TERMINATE(6);
+                if((R[0] == 'G' && R[1] == 'D') ||( R[0] == 'S' && R[1] == 'R'))
+                {
+                    Console.WriteLine("valid paige folt");
+                    int Random = ALLOCATE();
+                }
+                else
+                {
+                    Console.WriteLine("invalidoo paige folt");
+                    TERMINATE(6);
+                }
+
+                
+               
             }
             else if (TI == 2 && PI == 1)
             {
@@ -353,6 +369,14 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
             while (true)
             {
                 int RealAddress = AddressMap(IC);
+                //operand error
+                if(RealAddress == -2)
+                {
+                    Console.WriteLine("oppy erroru");
+                    TI = 0; PI = 2;
+                    MOS(RealAddress);
+                    continue;
+                }
                 //page fault
                 if(RealAddress == -1)
                 {
@@ -398,6 +422,22 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                     i = i * 10 + (IR[3] - 48);
 
                     int RA = AddressMap(i);
+                    //operand error
+                    if (RA == -2)
+                    {
+                        Console.WriteLine("oppy erroru");
+                        TI = 0; PI = 2;
+                        MOS(RA);
+                        continue;
+                    }
+                    //page fault
+                    if (RA == -1)
+                    {
+                        Console.WriteLine("page folt");
+                        TI = 0; PI = 3;
+                        MOS(RA);
+                        continue;
+                    }
 
 
                     for (int j = 0; j <= 3; j++)

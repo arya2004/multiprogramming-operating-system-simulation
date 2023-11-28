@@ -48,7 +48,8 @@ namespace OS_Phase_2
 
         public bool[] isAllocated { get; set; }
         public int LoadIC { get; set; }
-
+        public bool Terminate { get; set; }
+        public bool  RunMos { get; set; }
 
 
         public readonly string ip = "C:\\Users\\arya2\\Documents\\OS_Coursse_Project\\OS_Phase_2\\IO_Files\\Input.txt";
@@ -76,6 +77,8 @@ namespace OS_Phase_2
 
             isAllocated = new bool[30];
             LoadIC = 0;
+            Terminate = false;
+            RunMos = false;
         }
 
         public void INIT(int PageTable)
@@ -110,11 +113,12 @@ namespace OS_Phase_2
             }
             isAllocated[PageTable] = true;
             LoadIC = 0;
-           // PCB = new Pcb();
+            // PCB = new Pcb();
 
             //sr = new StreamReader(ip);
             // LineNumber = 0;
-
+            Terminate = false;
+            RunMos = false;
         }
 
 
@@ -130,6 +134,7 @@ namespace OS_Phase_2
             int RealAddress = M_of_PTE * 10 + (VirtualAddress % 10);
             if(RealAddress < 0 || RealAddress > 299)
             {
+                PI = 3;
                 return -1;
             }
             return RealAddress;
@@ -211,35 +216,54 @@ namespace OS_Phase_2
             {
                 Buffer[ii] = line[ii];
             }
-           if (Buffer[0] == '$' && Buffer[1] == 'E' && Buffer[2] == 'N' && Buffer[3] == 'D')
+            if (Buffer[0] == '$' && Buffer[1] == 'E' && Buffer[2] == 'N' && Buffer[3] == 'D')
             {
                 TERMINATE(1);
-               
+
             }
-
-            int k = 0;
-            int i = IR[2] - '0';
-            i = i * 10;
-            i += IR[3] - '0';
-
-            //int RealAddress = AddressMap(i);
-
-
-            for (int l = 0; l < 10; l++)
+            else
             {
-                for (int j = 0; j < 4; j++)
+
+                int k = 0;
+                int i = IR[2] - '0';
+                i = i * 10;
+                i += IR[3] - '0';
+                Console.WriteLine(i);
+                int RealAddress = AddressMap(i);
+                Console.WriteLine(RealAddress);
+                //page fault
+                if (RealAddress == -1)
                 {
-                    if (k < 40)
-                    {
-                        M[i, j] = Buffer[k];
-                        k++;
-                    }
-
-
+                    Console.WriteLine("page folt");
+                    TI = 0; PI = 3;
+                    SI = 0;
+                    MOS(RealAddress);
+                 
                 }
+                Console.WriteLine(i);
+                int NEwRealAddress = AddressMap(IC);
+                Console.WriteLine("new : " +NEwRealAddress);
 
-                i++;
+                for (int l = 0; l < 10; l++)
+                    {
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (k < 40)
+                            {
+                                M[NEwRealAddress + l, j] = Buffer[k];
+                                k++;
+                            }
+
+
+                        }
+
+                        //i++;
+                    }
+                
+
+                
             }
+
 
         }
 
@@ -250,36 +274,41 @@ namespace OS_Phase_2
             {
                 TERMINATE(2);
             }
-
-            for (int p = 0; p < 40; p++)
+            else
             {
-                Buffer[p] = ' ';
+                for (int p = 0; p < 40; p++)
+                {
+                    Buffer[p] = ' ';
+                }
+
+                int k = 0;
+                int i = IR[2] - '0';
+                i = i * 10;
+                i += IR[3] - '0';
+
+                int realAddr = AddressMap(i);
+                Console.WriteLine(realAddr + " " + i);
+
+                for (int l = 0; l < 10; ++l)
+                {
+                    for (int j = 0; j < 4; ++j)
+                    {
+                        Buffer[k] = M[realAddr, j];
+
+
+                        k++;
+                    }
+                    if (k == 40)
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                string temp = new string(Buffer);
+                File.AppendAllText(op, temp + Environment.NewLine);
             }
 
-            int k = 0;
-            int i = IR[2] - '0';
-            i = i * 10;
-            i += IR[3] - '0';
-
-
-
-            for (int l = 0; l < 10; ++l)
-            {
-                for (int j = 0; j < 4; ++j)
-                {
-                    Buffer[k] = M[i, j];
-
-
-                    k++;
-                }
-                if (k == 40)
-                {
-                    break;
-                }
-                i++;
-            }
-            string temp = new string(Buffer);
-            File.AppendAllText(op, temp + Environment.NewLine);
+            
 
         }
 
@@ -311,6 +340,7 @@ namespace OS_Phase_2
             }
             else if (TI == 2 && SI == 2)
             {
+                //write then term
                 TERMINATE(3);
             }
             else if (TI == 3 && SI == 3)
@@ -335,19 +365,24 @@ namespace OS_Phase_2
                  If Page Fault Valid, ALLOCATE, update page Table, Adjust IC if necessary,
 EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                  */
-                if((R[0] == 'G' && R[1] == 'D') ||( R[0] == 'S' && R[1] == 'R'))
-                {
-                    Console.WriteLine("valid paige folt");
-                    int Random = ALLOCATE();
-                }
-                else
+                if((R[0] == 'L' && R[1] == 'R') ||( R[0] == 'P' && R[1] == 'D'))
                 {
                     Console.WriteLine("invalidoo paige folt");
                     TERMINATE(6);
                 }
+                else
+                {
+                    
+                    Console.WriteLine("valid paige folt");
+                    int Random = ALLOCATE();
+                    int zz = Random / 10;
+                    M[PTR + IC, 2] = (char)((Random / 10) + '0');
+                    M[PTR + IC, 3] = (char)((Random % 10) + '0');
+                    //IC--;
+                }
 
-                
-               
+
+
             }
             else if (TI == 2 && PI == 1)
             {
@@ -366,14 +401,19 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
 
         public void EXECUTE()
         {
-            while (true)
+
+            Terminate = false;
+            while (!Terminate)
             {
+                RunMos = false;
                 int RealAddress = AddressMap(IC);
                 //operand error
+                IC++;
                 if(RealAddress == -2)
                 {
                     Console.WriteLine("oppy erroru");
                     TI = 0; PI = 2;
+                    SI = 0;
                     MOS(RealAddress);
                     continue;
                 }
@@ -382,6 +422,7 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                 {
                     Console.WriteLine("page folt");
                     TI = 0; PI = 3;
+                    SI = 0;
                     MOS(RealAddress);
                     continue;
                 }
@@ -390,30 +431,38 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                 {
                     IR[i] = M[RealAddress, i];
                 }
+
+                //INcrement IC
                 IC++;
 
                 if (IR[2] == '*' && IR[3] == '*')
                 {
                     Console.WriteLine("oj");
+                    break;
                 }
 
                 int Operand = ( (IR[2] - '0') * 10 ) + (IR[3] - '0');
-              //  int RealOperand = AddressMap(Operand);
+                int RealOperand = AddressMap(Operand);
+
 
                 if (IR[0] == 'G' && IR[1] == 'D')    //GD
                 {
-                    SI = 1;
-                    MOS(Operand);
+                    SI = 1;TI = 0;
+                    PI = 0;
+                    MOS(RealOperand);
                 }
                 else if (IR[0] == 'P' && IR[1] == 'D')       //PD
                 {
                     SI = 2;
-                    MOS(Operand);
+                    PI = 0;
+
+                    MOS(RealOperand);
                 }
                 else if (IR[0] == 'H')      //H
                 {
                     SI = 3;
-                    MOS(Operand);
+                    PI = 0;
+                    MOS(RealOperand);
                     break;
                 }
                 else if (IR[0] == 'L' && IR[1] == 'R')       //LR
@@ -422,21 +471,13 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                     i = i * 10 + (IR[3] - 48);
 
                     int RA = AddressMap(i);
-                    //operand error
-                    if (RA == -2)
-                    {
-                        Console.WriteLine("oppy erroru");
-                        TI = 0; PI = 2;
-                        MOS(RA);
-                        continue;
-                    }
                     //page fault
                     if (RA == -1)
                     {
                         Console.WriteLine("page folt");
-                        TI = 0; PI = 3;
+                        TI = 0; PI = 3; SI= 0;
                         MOS(RA);
-                        continue;
+                        break;
                     }
 
 
@@ -470,7 +511,11 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
                             count++;
 
                     if (count == 4)
+                    {
                         T = true;
+                    }else{
+                        T = false;
+                    }
 
                     //cout<<C;
                 }
@@ -485,9 +530,22 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
 
                     }
                 }
+                else
+                {
+                    //opcode error
+                    Console.WriteLine("opcode error");
+                    PI = 1;TI = 0;
+                    MOS(RealAddress);
+                    break;
+                }
 
 
                 PCB._TTC++;
+                if(PCB._TTC == PCB._TTL)
+                {
+                    TI = 2;
+                    MOS(RealOperand);
+                }
 
 
 
@@ -515,7 +573,9 @@ EXECUTE USER PROGRAM OTHERWISE TERMINATE (6)
 
                     if (line == null)
                     {
+                        Console.WriteLine("null ine");
                         break;
+                        
                     }
                     LineNumber++;
                     for (int ii = 0; ii < line.Length; ii++)
